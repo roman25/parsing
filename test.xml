@@ -1,0 +1,25 @@
+<Root>
+	<SubRoot>
+		<Sub1>
+			<Level1>A</Level1>
+			<Level2>B</Level2>
+			<Level3>C</Level3>
+			<Level4>D</Level4>
+		</Sub1>
+	</SubRoot>
+
+	<SubRoot>
+		<Sub1>
+			<Level1>1</Level1>
+			<Level2>2</Level2>
+			<Level3>3</Level3>
+		</Sub1>
+	</SubRoot>
+
+	<SubRoot>
+		<Sub1>
+			<Level2>2</Level2>
+			<Level3>3</Level3>
+		</Sub1>	
+	</SubRoot>
+</Root>
