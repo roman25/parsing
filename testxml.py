@@ -18,12 +18,18 @@ header = set()
 
 for place in root.findall('Place'):	
 	for identity in place.findall('Identity'):
-		row = {}	
+		row0 = {}	
 		for placeid in identity.findall('PlaceId'):
 			header.add(placeid.tag)
-			row[placeid.tag] = placeid.text
-			places_data.append(row)
-	
+			row0[placeid.tag] = placeid.text
+			places_data.append(row0)
+
+		row1 = {}
+		for timestamp in identity.findall('TimeStamp'):
+			header.add(timestamp.tag)
+			row1[timestamp.tag] = timestamp.text
+			places_data.append(row1)
+
 
 for place in root.findall('Place'):		
 	for locationlist in place.findall('LocationList'):
