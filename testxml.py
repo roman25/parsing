@@ -2,15 +2,10 @@
 
 import xml.etree.ElementTree as ET
 import csv
+from collections import Counter
 
 tree = ET.parse("sample.xml")
 root = tree.getroot()
-
-# open a file for writing
-places = open('/home/roman/parserpython/demo_data.csv', 'w') 
-
-# create the csv writer object
-csvwriter = csv.writer(places)
 
 # array for tags
 places_data = []
@@ -133,11 +128,43 @@ for place in root.findall('Place'):
 					row11[textt.tag] = textt.text
 					places_data.append(row11)
 
+uniq_id = []
+for place in root.findall('Place'):
+	for categorylist in place.findall('CategoryList'):
+		for category in categorylist:
+			fd = category.get('categorySystem')
+
+			if (fd == 'find-places'):
+				for categoryid in category:
+					uniq_id.append(categoryid.text)
+
+			if (fd == 'poi'):
+				for categoryid in category:
+					uniq_id.append(categoryid.text)
+
+
+			if (fd == 'places-cat'):
+				for categoryid in category:
+					uniq_id.append(categoryid.text)
 
 
 
+num_tags = Counter(uniq_id)
 
 with open('out.csv', 'w') as file:
-    writer = csv.DictWriter(file, fieldnames=sorted(header))
-    writer.writeheader()
-    writer.writerows(places_data)
+	writer = csv.DictWriter(file, fieldnames=sorted(header))
+	writer.writeheader()
+	writer.writerows(places_data)
+
+
+with open('Stat.csv', 'w') as file:
+	file.write("Number of tags:\t")
+        file.write(str(len(header)))
+        file.write("\n")
+
+	file.write("Unique CategoryId:\n")
+	for k, v in  num_tags.most_common():	        
+		file.write( "{}: {}\n".format(k, v) )
+
+
+
