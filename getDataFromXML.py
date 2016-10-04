@@ -16,8 +16,8 @@ categorysystem_data = []
 address_data = []
 official_data = []
 categoryname_data = []
-adminlevel_data = []
-adminname_data = []
+levels_data = []
+names_data = []
 id_data = []
 
 
@@ -28,8 +28,8 @@ header_categorysystem = set()
 header_address = set()
 header_official = set()
 header_categoryname = set()
-header_adminlevel = set()
-header_adminname = set()
+header_levels = set()
+header_names = set()
 header_id = set()
 
 
@@ -51,16 +51,11 @@ for place in root.findall('Place'):
 
 	row_address = {}
 	row_official = {}
-	row_categoryname = {}
-	row_adminlevel1 = {}
-	row_adminlevel2 = {}
-	row_adminlevel3 = {}
-	row_adminlevel4 = {}
+	row_categorynamePOI = {}
+	row_categorynamePC = {}
 
-	row_adminname1 = {}
-	row_adminname2 = {}
-	row_adminname3 = {}
-	row_adminname4 = {}
+	row_levels = {}
+	row_names = {}
 
 	row_id = {}
 
@@ -198,10 +193,19 @@ for place in root.findall('Place'):
 
 	for categorylist in place.findall('CategoryList'):
 		for category in categorylist.findall('Category'):
-			for categoryname in category.findall('CategoryName'):
-				for textt in categoryname.findall('Text'):
-					header_categoryname.add(textt.tag)
-					row_categoryname[textt.tag] = textt.text
+			nameCategory = category.get('categorySystem')
+			if nameCategory == 'poi':
+				for categoryname in category.findall('CategoryName'):
+					header_categoryname.add(categoryname.tag)
+					for textt in categoryname.findall('Text'):
+						row_categorynamePOI[categoryname.tag] = textt.text
+
+
+			if nameCategory == 'places-cat':
+				for categoryname in category.findall('CategoryName'):
+					header_categoryname.add(categoryname.tag)
+					for textt in categoryname.findall('Text'):
+						row_categorynamePC[categoryname.tag] = textt.text
 
 
 
@@ -211,39 +215,38 @@ for place in root.findall('Place'):
 				for parsed in address.findall('Parsed'):
 					for admin in parsed.findall('Admin'):
 						for adminlevel in admin.findall('AdminLevel'):
-							header_adminlevel.add(adminlevel.tag)
-							for level in adminlevel.findall('Level1'):
-								row_adminlevel1[adminlevel.tag] = level.text
-
+							for level1 in adminlevel.findall('Level1'):
+								header_levels.add(level1.tag)
+								row_levels[level1.tag] = level1.text
 							for level2 in adminlevel.findall('Level2'):
-								row_adminlevel2[adminlevel.tag] = level2.text
-
+								header_levels.add(level2.tag)
+								row_levels[level2.tag] = level2.text
 							for level3 in adminlevel.findall('Level3'):
-								row_adminlevel3[adminlevel.tag] = level3.text
-
+								header_levels.add(level3.tag)
+								row_levels[level3.tag] = level3.text
 							for level4 in adminlevel.findall('Level4'):
-								row_adminlevel4[adminlevel.tag] = level4.text
-
+								header_levels.add(level4.tag)
+								row_levels[level4.tag] = level4.text
 
 
 	for locationlist in place.findall('LocationList'):
 		for location in locationlist.findall('Location'):
 			for address in location.findall('Address'):
 				for parsed in address.findall('Parsed'):
-					for admin in parsed.findall('Admin'):
+			    		for admin in parsed.findall('Admin'):
 						for adminname in admin.findall('AdminName'):
-							header_adminname.add(adminname.tag)
-							for level in adminname.findall('Level1'):
-								row_adminname1[adminname.tag] = level.text
-
-							for level2 in adminname.findall('Level2'):
-								row_adminname2[adminname.tag] = level2.text
-
+				    			for level1 in adminname.findall('Level1'):
+								header_names.add(level1.tag)
+								row_names[level1.tag] = level1.text
+				    			for level2 in adminname.findall('Level2'):
+								header_names.add(level2.tag)
+								row_names[level2.tag] = level2.text
 							for level3 in adminname.findall('Level3'):
-								row_adminname3[adminname.tag] = level3.text
-
+								header_names.add(level3.tag)
+								row_names[level3.tag] = level3.text
 							for level4 in adminname.findall('Level4'):
-								row_adminname4[adminname.tag] = level4.text
+								header_names.add(level4.tag)
+								row_names[level4.tag] = level4.text
 
 
 	for identity in place.findall('Identity'):
@@ -271,19 +274,90 @@ for place in root.findall('Place'):
 	categorysystem_data.append(row_categorysystem3)
 	address_data.append(row_address)
 	official_data.append(row_official)
-	categoryname_data.append(row_categoryname)
-	adminlevel_data.append(row_adminlevel1)
-	adminlevel_data.append(row_adminlevel2)
-	adminlevel_data.append(row_adminlevel3)
-	adminlevel_data.append(row_adminlevel4)
-
-	adminname_data.append(row_adminname1)
-	adminname_data.append(row_adminname2)
-	adminname_data.append(row_adminname3)
-	adminname_data.append(row_adminname4)
+	categoryname_data.append(row_categorynamePOI)
+	categoryname_data.append(row_categorynamePC)
+	levels_data.append(row_levels)
+	names_data.append(row_names)
 	id_data.append(row_id)
 
 
+for i in range(0, len(categorysystem_data)-3):
+	categorysystem_data.pop()
+
+
+############################################	STATISTIC	#########################################
+#get number of tags for 4.1
+fullLenght = []
+fullLenght.append(len(header_contact))
+fullLenght.append(len(header_geoposition))
+fullLenght.append(len(header_categoryid))
+fullLenght.append(len(header_categorysystem))
+fullLenght.append(len(header_address))
+fullLenght.append(len(header_official))
+fullLenght.append(len(header_categoryname))
+fullLenght.append(len(header_levels))
+fullLenght.append(len(header_names))
+fullLenght.append(len(header_id))
+
+
+#get values for 4.2
+uniq_id = []
+uniq_lc = []
+for place in root.findall('Place'):
+	for categorylist in place.findall('CategoryList'):
+		for category in categorylist:
+			fd = category.get('categorySystem')
+
+			if (fd == 'find-places'):
+				for categoryid in category:
+					uniq_id.append(categoryid.text)
+
+			if (fd == 'poi'):
+				for categoryid in category:
+					uniq_id.append(categoryid.text)
+
+
+			if (fd == 'places-cat'):
+				for categoryid in category:
+					uniq_id.append(categoryid.text)
+#get values for 4.3
+	for namelist in place.findall('NameList'):
+		for name in namelist.findall('Name'):
+			for textlist in name.findall('TextList'):
+				for textt in textlist.findall('Text'):
+					for basetext in textt.findall('BaseText'):
+						lc = basetext.get('languageCode')
+						uniq_lc.append(lc)
+
+
+
+space = uniq_id[2]
+count = len(uniq_id)-1
+for x in range(len(uniq_id)-1):
+	if uniq_id[count] == space:
+		del uniq_id[count]
+	count = count-1
+
+num_tags = Counter(uniq_id)
+num_lc = Counter(uniq_lc)
+
+
+
+####	records to files
+with open('files/Stat.csv', 'w') as file:
+	file.write("Number of tags:\t")
+        file.write(str(sum(fullLenght)))
+        file.write("\n")
+        file.write("\n")
+
+	file.write("Unique CategoryId:\t\n")
+	for k, v in  num_tags.most_common():	        
+		file.write( "{}:\t {}\n".format(k, v) )
+	file.write("\n")
+
+	file.write("Unique languageCode:\n")
+	for k, v in  num_lc.most_common():	        
+		file.write( "{}:\t {}\n".format(k, v) )
 
 with open('files/contact.csv', 'w') as file:
 	writer = csv.DictWriter(file, fieldnames=sorted(header_contact))
@@ -321,19 +395,19 @@ with open('files/categoryname.csv', 'w') as file:
 	writer.writerows(categoryname_data)
 
 
-with open('files/adminlevel.csv', 'w') as file:
-	writer = csv.DictWriter(file, fieldnames=sorted(header_adminlevel))
-	writer.writeheader()
-	writer.writerows(adminlevel_data)
+with open('files/levelsadmin.csv', 'w') as file:
+    writer = csv.DictWriter(file, fieldnames=sorted(header_levels))
+    writer.writeheader()
+    writer.writerows(levels_data)
 
-with open('files/adminname.csv', 'w') as file:
-	writer = csv.DictWriter(file, fieldnames=sorted(header_adminname))
-	writer.writeheader()
-	writer.writerows(adminname_data)
+with open('files/namesadmin.csv', 'w') as file:
+    writer = csv.DictWriter(file, fieldnames=sorted(header_names))
+    writer.writeheader()
+    writer.writerows(names_data)
 
-with open('files/id.csv', 'w') as file:
+with open('files/id_data.csv', 'w') as file:
 	writer = csv.DictWriter(file, fieldnames=sorted(header_id))
 	writer.writeheader()
 	writer.writerows(id_data)
 
-#00.12
+
