@@ -281,6 +281,11 @@ for place in root.findall('Place'):
 	id_data.append(row_id)
 
 
+
+for x in range(0, 2):
+    del categoryname_data[x]
+
+
 for i in range(0, len(categorysystem_data)-3):
 	categorysystem_data.pop()
 
