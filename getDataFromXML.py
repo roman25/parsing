@@ -92,16 +92,19 @@ for place in root.findall('Place'):
 
 	for categorylist in place.findall('CategoryList'):
 		for category in categorylist.findall('Category'):
-			fd = category.get('categorySystem')
-			for categoryid in category.findall('CategoryId'):
-				header_categoryid.add(categoryid.tag)
-				if (fd == 'find-places'):
-					row_findplaces[categoryid.tag] = categoryid.text
-				if (fd == 'places-cat'):
-					row_placescat[categoryid.tag] = categoryid.text
-				if (fd == 'poi'):
-					row_poi[categoryid.tag] = categoryid.text
-
+		    fd = category.get('categorySystem')
+		    for categoryid in category.findall('CategoryId'):
+		        header_categoryid.add(categoryid.tag)
+		        header_categoryid.add('category')
+		        if (fd == 'find-places'):
+		            row_findplaces[categoryid.tag] = categoryid.text
+		            row_findplaces['category'] = fd
+		        if (fd == 'places-cat'):
+		            row_placescat[categoryid.tag] = categoryid.text
+		            row_placescat['category'] = fd
+		        if (fd == 'poi'):
+		            row_poi[categoryid.tag] = categoryid.text
+		            row_poi['category'] = fd
 
 	for categorylist in place.findall('CategoryList'):
 		for category in categorylist.findall('Category'):
@@ -348,10 +351,10 @@ num_lc = Counter(uniq_lc)
 
 
 
-####	records to files
+####	record to files
 with open('files/Stat.csv', 'w') as file:
 	file.write("Number of tags:\t")
-        file.write(str(sum(fullLenght)))
+        file.write(str(sum(fullLenght)-1))
         file.write("\n")
         file.write("\n")
 
